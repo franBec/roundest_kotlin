@@ -276,7 +276,7 @@
 				<version>7.10.0</version>
 				<executions>
 					<execution>
-						<id>spring (server) generation - roundest.yaml</id>
+						<id>kotlin-spring (server) generation - roundest.yaml</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
