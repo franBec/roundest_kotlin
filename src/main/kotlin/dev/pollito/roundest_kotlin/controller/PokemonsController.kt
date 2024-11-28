@@ -35,7 +35,8 @@ class PokemonsController(
         );
     }
 
-    override fun incrementPokemonVotes(id: Long): ResponseEntity<Unit> {
-        return ResponseEntity<Unit>(pokemonService.incrementPokemonVotes(id), HttpStatus.NO_CONTENT)
+    override fun incrementPokemonVotes(id: Long): ResponseEntity<Void> {
+        pokemonService.incrementPokemonVotes(id)
+        return ResponseEntity<Void>(HttpStatus.NO_CONTENT)
     }
 }
