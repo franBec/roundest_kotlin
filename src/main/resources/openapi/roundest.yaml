@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: roundest API
+  description: A RESTful API for "The Roundest Pokémon" programming exercise. Only 1st Gen Pokemons.
+  version: 1.0.0
+  contact:
+    name: Pollito
+    url: https://pollito.dev
+servers:
+  - url: 'http://localhost:8080'
+    description: dev
+paths:
+  /pokemons:
+    get:
+      tags:
+        - Pokemon
+      summary: List all Pokemons
+      operationId: findAll
+      parameters:
+        - description: Use this parameter to specify the page of your request
+          in: query
+          name: pageNumber
+          schema:
+            default: 0
+            minimum: 0
+            maximum: 2147483647
+            type: integer
+        - description: Use this parameter to specify a pagination limit (number of results per page) for your request
+          in: query
+          name: pageSize
+          schema:
+            default: 10
+            maximum: 10
+            minimum: 1
+            type: integer
+        - description: Use this parameter to specify the property by which you want to sort the results of your request
+          in: query
+          name: sortProperty
+          schema:
+            $ref: '#/components/schemas/PokemonSortProperty'
+        - description: Use this parameter to specify the direction (asc or desc) of your request results
+          in: query
+          name: sortDirection
+          schema:
+            $ref: '#/components/schemas/SortDirection'
+        - description: when this parameter is true, will bring (pageSize) random results, ignoring all other parameters except for pageSize
+          in: query
+          name: random
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: List of Pokemons
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pokemons'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /pokemons/{id}:
+    patch:
+      tags:
+        - Pokemon
+      summary: Increment Pokemon's votes property by 1
+      description: Increment Pokemon's votes property by 1. Pokemon is identified by id. No body is required. On success, status 204 with no body is returned
+      operationId: incrementPokemonVotes
+      parameters:
+        - description: Pokemon id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int64
+            minimum: 1
+            maximum: 151
+            type: integer
+      responses:
+        204:
+          description: Pokemon vote count incremented +1 successfully
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      properties:
+        detail:
+          description: Description of the problem.
+          example: No value present
+          type: string
+        instance:
+          description: The endpoint where the problem was encountered.
+          example: "/generate"
+          type: string
+        status:
+          description: http status code
+          example: 500
+          type: integer
+        title:
+          description: A short headline of the problem.
+          example: "NoSuchElementException"
+          type: string
+        timestamp:
+          description: ISO 8601 Date.
+          example: "2024-01-04T15:30:00Z"
+          type: string
+        trace:
+          description: opentelemetry TraceID, a unique identifier.
+          example: "0c6a41e22fe6478cc391908406ca9b8d"
+          type: string
+        type:
+          description: used to point the client to documentation where it is explained clearly what happened and why.
+          example: "about:blank"
+          type: string
+      type: object
+    Pageable:
+      type: object
+      properties:
+        pageNumber:
+          description: Current page number (starts from 0)
+          example: 0
+          minimum: 0
+          maximum: 2147483647
+          type: integer
+        pageSize:
+          description: Number of items retrieved on this page
+          example: 1
+          minimum: 0
+          maximum: 2147483647
+          type: integer
+    Pokemon:
+      properties:
+        id:
+          description: Pokemon id
+          example: 1
+          format: int64
+          minimum: 1
+          maximum: 151
+          type: integer
+        name:
+          description: Pokemon name
+          example: Bulbasaur
+          maxLength: 10
+          type: string
+        votes:
+          description: Pokemon current votes as "the roundest"
+          example: 1
+          minimum: 0
+          maximum: 2147483647
+          type: integer
+      type: object
+    Pokemons:
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pokemon'
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        totalElements:
+          description: Total number of items that meet the criteria
+          example: 10
+          type: integer
+      type: object
+    PokemonSortProperty:
+      enum: [
+        id,
+        name,
+        votes
+      ]
+      default: id
+      type: string
+    SortDirection:
+      type: string
+      enum: [ ASC, DESC ]
+      default: ASC
