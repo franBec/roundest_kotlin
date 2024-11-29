@@ -7,5 +7,5 @@ import org.springframework.data.repository.query.Param
 
 interface PokemonRepository : JpaRepository<Pokemon, Long> {
     @Query("SELECT p FROM Pokemon p WHERE p.id IN :ids")
-    fun findByIds(@Param("ids") ids: List<Long?>?): List<Pokemon>
+    fun findByIds(@Param("ids") ids: List<Long>): List<Pokemon>
 }

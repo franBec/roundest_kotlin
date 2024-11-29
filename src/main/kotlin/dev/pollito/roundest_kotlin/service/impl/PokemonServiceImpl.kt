@@ -35,10 +35,11 @@ class PokemonServiceImpl(
         )
     }
 
-    override fun incrementPokemonVotes(id: Long) {
+    override fun incrementPokemonVotes(id: Long): Void? {
         val pokemon = pokemonRepository.findById(id).orElseThrow()
         pokemon.votes += 1
         pokemonRepository.save(pokemon)
+        return null
     }
 
     private fun generateRandomIds(count: Int): List<Long> {

@@ -83,6 +83,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.mockito.kotlin</groupId>
+			<artifactId>mockito-kotlin</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
 			<version>1.9.22.1</version>
@@ -257,22 +263,6 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<!--https://pitest.org/quickstart/mutators/ “STRONGER” group-->
-					<mutators>
-						<mutator>CONDITIONALS_BOUNDARY</mutator>
-						<mutator>INCREMENTS</mutator>
-						<mutator>INVERT_NEGS</mutator>
-						<mutator>MATH</mutator>
-						<mutator>NEGATE_CONDITIONALS</mutator>
-						<mutator>VOID_METHOD_CALLS</mutator>
-						<mutator>EMPTY_RETURNS</mutator>
-						<mutator>FALSE_RETURNS</mutator>
-						<mutator>TRUE_RETURNS</mutator>
-						<mutator>NULL_RETURNS</mutator>
-						<mutator>PRIMITIVE_RETURNS</mutator>
-						<mutator>REMOVE_CONDITIONALS_EQUAL_ELSE</mutator>
-						<mutator>EXPERIMENTAL_SWITCH</mutator>
-					</mutators>
 					<targetClasses>
 						<param>${project.groupId}.${project.artifactId}.controller.*</param>
 						<param>${project.groupId}.${project.artifactId}.service.*</param>

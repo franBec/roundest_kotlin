@@ -6,5 +6,5 @@ import org.springframework.data.domain.PageRequest
 interface PokemonService {
     fun findAll(pageRequest: PageRequest, random: Boolean): Pokemons
 
-    fun incrementPokemonVotes(id: Long)
+    fun incrementPokemonVotes(id: Long): Void?
 }
