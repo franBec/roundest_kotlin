@@ -9,14 +9,13 @@ The OpenAPI documentation for the API can be found in the [src/main/resources/op
 ## Getting Started
 
 ### Prerequisites
-- For running with Maven:
+- For running with Gradle:
     - **Java 21**
-    - **Kotlin 1.9+**
-    - **Maven**
+    - **Gradle**
 - For containerized deployment
     - **Docker**
 
-### Run with Maven
+### Run with Gradle
 1. Clone the repository:
     ```bash
     git clone https://github.com/franBec/roundest_kotlin
@@ -25,10 +24,11 @@ The OpenAPI documentation for the API can be found in the [src/main/resources/op
     ```bash
     cd roundest_kotlin
     ```
-3. Build and run the application using Maven:
+3. Build and run the application using Gradle:
     ```bash
-    mvn spring-boot:run
+    ./gradlew bootRun
     ```
+
 ### Run with Docker
 1. Clone the repository:
      ```bash
