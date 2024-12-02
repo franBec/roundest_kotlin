@@ -112,3 +112,17 @@ openApiGenerate {
     modelPackage.set("${group}.${project.name}.model")
     outputDir.set(layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString())
 }
+
+pitest {
+	junit5PluginVersion.set("1.2.1")
+	outputFormats.set(listOf("HTML"))
+	targetClasses.set(
+		listOf(
+			"${group}.${project.name}.controller.*",
+			"${group}.${project.name}.service.*"
+		)
+	)
+	targetTests.set(listOf("${group}.${project.name}.*"))
+	timestampedReports.set(false)
+	useClasspathFile.set(true)
+}
