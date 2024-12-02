@@ -63,6 +63,7 @@ kapt {
     arguments {
         arg("mapstruct.defaultComponentModel", "spring")
     }
+	correctErrorTypes=true
 }
 
 kotlin {
@@ -84,6 +85,12 @@ tasks.named<JavaCompile>("compileJava") {
 tasks.named<Test>("test") {
 	dependsOn("pitest")
 	useJUnitPlatform()
+}
+
+tasks.configureEach {
+	if (name == "kaptGenerateStubsKotlin"){
+		dependsOn("openApiGenerate")
+	}
 }
 
 openApiGenerate {
