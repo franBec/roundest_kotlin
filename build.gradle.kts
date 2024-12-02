@@ -1,7 +1,7 @@
 plugins {
 	id("info.solidsoft.pitest") version "1.15.0"
-	id ("org.openapi.generator") version "7.10.0"
 	id("io.spring.dependency-management") version "1.1.6"
+	id ("org.openapi.generator") version "7.10.0"
 	id("org.springframework.boot") version "3.4.0"
 	kotlin("jvm") version "1.9.25"
 	kotlin("kapt") version "2.1.0"
