@@ -1,7 +1,7 @@
 # roundest_kotlin
 
 ## Project Overview
-This project is implemented in **Java Spring Boot 3** and provides a RESTful API for "The roundest Pokémon" type exercise.
+This project is implemented in **Kotlin Spring Boot 3** and provides a RESTful API for "The roundest Pokémon" type exercise.
 
 ## API Documentation
 The OpenAPI documentation for the API can be found in the [src/main/resources/openapi/roundest.yaml file](https://github.com/franBec/roundest_kotlin/blob/main/src/main/resources/openapi/roundest.yaml).
