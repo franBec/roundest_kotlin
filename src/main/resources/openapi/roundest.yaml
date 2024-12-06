@@ -150,6 +150,11 @@ components:
           example: Bulbasaur
           maxLength: 10
           type: string
+        spriteUrl:
+          description: Pokemon sprite url
+          example: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png
+          maxLength: 255
+          type: string
         votes:
           description: Pokemon current votes as "the roundest"
           example: 1

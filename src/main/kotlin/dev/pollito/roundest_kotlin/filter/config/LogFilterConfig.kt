@@ -1,4 +1,4 @@
-package dev.pollito.roundest_kotlin.config
+package dev.pollito.roundest_kotlin.filter.config
 
 import dev.pollito.roundest_kotlin.filter.LogFilter
 import org.springframework.boot.web.servlet.FilterRegistrationBean

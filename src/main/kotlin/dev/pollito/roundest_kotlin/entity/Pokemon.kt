@@ -19,6 +19,9 @@ data class Pokemon(
     @Column(name = "name", nullable = false, length = 10, updatable = false, unique = true)
     val name: String,
 
+    @Column(name = "sprite_url", nullable = false, updatable = false, unique = true)
+    val spriteUrl: String,
+
     @Column(name = "votes", nullable = false)
     var votes: Int = 0
 ) : Serializable

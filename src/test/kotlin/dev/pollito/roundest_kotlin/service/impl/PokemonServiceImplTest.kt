@@ -51,7 +51,7 @@ class PokemonServiceImplTest {
 
     @Test
     fun `when incrementPokemonVotes then return Void`() {
-        val pokemon = Pokemon(name = "Bulbasaur")
+        val pokemon = Pokemon(name = "Bulbasaur", spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/705.png")
         val pokemonInitialVotes = pokemon.votes
 
         whenever(pokemonRepository.findById(any<Long>())).thenReturn(Optional.of(pokemon))
