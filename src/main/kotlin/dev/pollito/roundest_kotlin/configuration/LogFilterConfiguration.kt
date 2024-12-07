@@ -1,4 +1,4 @@
-package dev.pollito.roundest_kotlin.filter.config
+package dev.pollito.roundest_kotlin.configuration
 
 import dev.pollito.roundest_kotlin.filter.LogFilter
 import org.springframework.boot.web.servlet.FilterRegistrationBean
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class LogFilterConfig {
+class LogFilterConfiguration {
     @Bean
     fun loggingFilter(): FilterRegistrationBean<LogFilter> {
         val registrationBean: FilterRegistrationBean<LogFilter> = FilterRegistrationBean<LogFilter>()
