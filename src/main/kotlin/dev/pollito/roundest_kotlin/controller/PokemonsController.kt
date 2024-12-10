@@ -1,6 +1,7 @@
 package dev.pollito.roundest_kotlin.controller
 
 import dev.pollito.roundest_kotlin.api.PokemonsApi
+import dev.pollito.roundest_kotlin.model.Pokemon
 import dev.pollito.roundest_kotlin.model.PokemonSortProperty
 import dev.pollito.roundest_kotlin.model.Pokemons
 import dev.pollito.roundest_kotlin.model.SortDirection
@@ -16,6 +17,7 @@ class PokemonsController(
     private val pokemonService: PokemonService
 ): PokemonsApi{
     override fun findAll(
+        name: String?,
         pageNumber: Int,
         pageSize: Int,
         sortProperty: PokemonSortProperty,
@@ -24,6 +26,7 @@ class PokemonsController(
     ): ResponseEntity<Pokemons> {
         return ResponseEntity.ok(
             pokemonService.findAll(
+                name,
                 PageRequest.of(
                     pageNumber,
                     pageSize,
@@ -32,7 +35,11 @@ class PokemonsController(
                 ),
                 random
             )
-        );
+        )
+    }
+
+    override fun findById(id: Long): ResponseEntity<Pokemon> {
+        return ResponseEntity.ok(pokemonService.findById(id))
     }
 
     override fun incrementPokemonVotes(id: Long): ResponseEntity<Void> {

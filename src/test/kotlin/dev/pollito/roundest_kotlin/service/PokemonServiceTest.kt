@@ -1,8 +1,9 @@
-package dev.pollito.roundest_kotlin.service.impl
+package dev.pollito.roundest_kotlin.service
 
 import dev.pollito.roundest_kotlin.entity.Pokemon
 import dev.pollito.roundest_kotlin.mapper.PokemonModelMapper
 import dev.pollito.roundest_kotlin.repository.PokemonRepository
+import dev.pollito.roundest_kotlin.service.impl.PokemonServiceImpl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,7 +20,7 @@ import org.springframework.data.domain.PageRequest
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-class PokemonServiceImplTest {
+class PokemonServiceTest {
 
     @InjectMocks
     private lateinit var pokemonService: PokemonServiceImpl
@@ -32,11 +33,11 @@ class PokemonServiceImplTest {
     private var pokemonModelMapper: PokemonModelMapper = Mappers.getMapper(PokemonModelMapper::class.java)
 
     @Test
-    fun `when findAll not random then return Pokemons`() {
+    fun `when findAll then return Pokemons`() {
         whenever(pokemonRepository.findAll(any<PageRequest>()))
             .thenReturn(PageImpl(emptyList(), PageRequest.of(0, 10), 0))
 
-        assertNotNull(pokemonService.findAll(mock(), false))
+        assertNotNull(pokemonService.findAll(null, mock(), false))
     }
 
     @Test
@@ -46,12 +47,27 @@ class PokemonServiceImplTest {
         val pageRequest: PageRequest = mock()
         whenever(pageRequest.pageSize).thenReturn(2)
 
-        assertNotNull(pokemonService.findAll(pageRequest, true))
+        assertNotNull(pokemonService.findAll(null, pageRequest, true))
+    }
+
+    @Test
+    fun `when findAll with name then return Pokemons`(){
+        whenever(pokemonRepository.findByNameContainingIgnoreCase(any<String>(), any<PageRequest>()))
+            .thenReturn(PageImpl(emptyList(), PageRequest.of(0, 10), 0))
+
+        assertNotNull(pokemonService.findAll("abra", mock(), false))
+    }
+
+    @Test
+    fun `when findById then return Pokemon`(){
+        whenever(pokemonRepository.findById(any<Long>())).thenReturn(Optional.of(Pokemon(name = "Bulbasaur", spriteUrl = "url")))
+
+        assertNotNull(pokemonService.findById(1L))
     }
 
     @Test
     fun `when incrementPokemonVotes then return Void`() {
-        val pokemon = Pokemon(name = "Bulbasaur", spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/705.png")
+        val pokemon = Pokemon(name = "Bulbasaur", spriteUrl = "url")
         val pokemonInitialVotes = pokemon.votes
 
         whenever(pokemonRepository.findById(any<Long>())).thenReturn(Optional.of(pokemon))

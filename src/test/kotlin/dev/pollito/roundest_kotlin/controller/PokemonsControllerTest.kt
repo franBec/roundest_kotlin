@@ -24,9 +24,19 @@ class PokemonsControllerTest {
 
     @Test
     fun `when findAll then return OK`() {
-        whenever(pokemonService.findAll(any<PageRequest>(), any<Boolean>())).thenReturn(mock())
+        whenever(pokemonService.findAll(any<String>(), any<PageRequest>(), any<Boolean>())).thenReturn(mock())
 
-        val response = pokemonsController.findAll(0, 10, PokemonSortProperty.ID, SortDirection.ASC, true)
+        val response = pokemonsController.findAll("Bulbasur",0, 10, PokemonSortProperty.ID, SortDirection.ASC, true)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertNotNull(response.body)
+    }
+
+    @Test
+    fun `when findById then return OK`(){
+        whenever(pokemonService.findById(any<Long>())).thenReturn(mock())
+
+        val response = pokemonsController.findById(1L)
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertNotNull(response.body)
