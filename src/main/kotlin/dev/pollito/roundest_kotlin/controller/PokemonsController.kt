@@ -2,12 +2,8 @@ package dev.pollito.roundest_kotlin.controller
 
 import dev.pollito.roundest_kotlin.api.PokemonsApi
 import dev.pollito.roundest_kotlin.model.Pokemon
-import dev.pollito.roundest_kotlin.model.PokemonSortProperty
 import dev.pollito.roundest_kotlin.model.Pokemons
-import dev.pollito.roundest_kotlin.model.SortDirection
 import dev.pollito.roundest_kotlin.service.PokemonService
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -20,19 +16,15 @@ class PokemonsController(
         name: String?,
         pageNumber: Int,
         pageSize: Int,
-        sortProperty: PokemonSortProperty,
-        sortDirection: SortDirection,
+        pageSort: List<String>,
         random: Boolean
     ): ResponseEntity<Pokemons> {
         return ResponseEntity.ok(
             pokemonService.findAll(
                 name,
-                PageRequest.of(
-                    pageNumber,
-                    pageSize,
-                    Sort.Direction.fromString(sortDirection.value),
-                    sortProperty.value
-                ),
+                pageNumber,
+                pageSize,
+                pageSort,
                 random
             )
         )

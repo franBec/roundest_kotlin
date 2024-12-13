@@ -5,10 +5,12 @@ import dev.pollito.roundest_kotlin.model.Pokemon
 import dev.pollito.roundest_kotlin.model.Pokemons
 import dev.pollito.roundest_kotlin.repository.PokemonRepository
 import dev.pollito.roundest_kotlin.service.PokemonService
+import dev.pollito.roundest_kotlin.util.PageableUtils
+import dev.pollito.roundest_kotlin.util.RandomUtils.generateRandomIds
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import kotlin.random.Random
 
 @Service
 class PokemonServiceImpl(
@@ -16,16 +18,27 @@ class PokemonServiceImpl(
     private val pokemonModelMapper: PokemonModelMapper
 ) : PokemonService {
 
-    companion object {
-        private const val POKEMON_ID_MIN = 1
-        private const val POKEMON_ID_MAX = 151
-    }
+    override fun findAll(
+        name: String?,
+        pageNumber: Int,
+        pageSize: Int,
+        pageSort: List<String>,
+        random: Boolean
+    ): Pokemons {
+        if (random) {
+            return getRandomPokemons(pageSize)
+        }
 
-    override fun findAll(name: String?, pageRequest: PageRequest, random: Boolean): Pokemons {
-        return when {
-            random -> getRandomPokemons(pageRequest.pageSize)
-            !name.isNullOrBlank() -> pokemonModelMapper.map(pokemonRepository.findByNameContainingIgnoreCase(name, pageRequest))
-            else -> pokemonModelMapper.map(pokemonRepository.findAll(pageRequest))
+        val pageable: Pageable = PageableUtils.createPageable(
+            pageNumber,
+            pageSize,
+            pageSort
+        )
+
+        return if (name.isNullOrBlank()) {
+            pokemonModelMapper.map(pokemonRepository.findAll(pageable))
+        } else {
+            pokemonModelMapper.map(pokemonRepository.findByNameContainingIgnoreCase(name, pageable))
         }
     }
 
@@ -45,13 +58,5 @@ class PokemonServiceImpl(
         return pokemonModelMapper.map(
             PageImpl(pokemons, PageRequest.of(0, size), pokemons.size.toLong())
         )
-    }
-
-    private fun generateRandomIds(count: Int): List<Long> {
-        val ids = mutableSetOf<Long>()
-        while (ids.size < count) {
-            ids.add(POKEMON_ID_MIN + Random.nextLong((POKEMON_ID_MAX - POKEMON_ID_MIN).toLong()))
-        }
-        return ids.toList()
     }
 }

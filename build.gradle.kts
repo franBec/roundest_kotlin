@@ -1,3 +1,11 @@
+val micrometerObservationVersion = "1.14.1"
+val micrometerTracingBridgeOtelVersion = "1.4.0"
+val swaggerCoreJakartaVersion = "2.2.26"
+val aspectjtoolsVersion = "1.9.22.1"
+val mapstructVersion = "1.6.3"
+val jacksonDatabindNullableVersion = "0.2.6"
+val mockitoKotlinVersion = "5.4.0"
+
 plugins {
 	id("info.solidsoft.pitest") version "1.15.0"
 	id("io.spring.dependency-management") version "1.1.6"
@@ -40,22 +48,22 @@ dependencies {
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("io.micrometer:micrometer-observation:1.14.1")
-    implementation("io.micrometer:micrometer-tracing-bridge-otel:1.4.0")
-    implementation("io.swagger.core.v3:swagger-core-jakarta:2.2.26")
-    implementation("org.aspectj:aspectjtools:1.9.22.1")
+	implementation("io.micrometer:micrometer-observation:$micrometerObservationVersion")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerTracingBridgeOtelVersion")
+    implementation("io.swagger.core.v3:swagger-core-jakarta:$swaggerCoreJakartaVersion")
+    implementation("org.aspectj:aspectjtools:$aspectjtoolsVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.mapstruct:mapstruct:1.6.3")
-    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+	implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    implementation("org.openapitools:jackson-databind-nullable:$jacksonDatabindNullableVersion")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	kapt("org.mapstruct:mapstruct-processor:1.6.3")
+	kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+	testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -119,7 +127,8 @@ pitest {
 	targetClasses.set(
 		listOf(
 			"${group}.${project.name}.controller.*",
-			"${group}.${project.name}.service.*"
+			"${group}.${project.name}.service.*",
+			"${group}.${project.name}.util.*"
 		)
 	)
 	targetTests.set(listOf("${group}.${project.name}.*"))

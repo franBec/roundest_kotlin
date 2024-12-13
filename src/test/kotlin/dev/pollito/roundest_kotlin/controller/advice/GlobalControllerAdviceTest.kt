@@ -1,5 +1,6 @@
 package dev.pollito.roundest_kotlin.controller.advice
 
+import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -7,9 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.resource.NoResourceFoundException
 
@@ -31,6 +32,24 @@ class GlobalControllerAdviceTest {
     }
 
     @Test
+    fun `when ConstraintViolationException then return ProblemDetail`() {
+        val exception: ConstraintViolationException = mock()
+        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `when generic Exception then return ProblemDetail`() {
+        val exception: Exception = mock()
+        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @Test
+    fun `when MethodArgumentTypeMismatchException then return ProblemDetail`() {
+        val exception: MethodArgumentTypeMismatchException = mock()
+        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
     fun `when NoResourceFoundException then return ProblemDetail`() {
         val exception: NoResourceFoundException = mock()
         problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.NOT_FOUND)
@@ -43,20 +62,8 @@ class GlobalControllerAdviceTest {
     }
 
     @Test
-    fun `when MethodArgumentNotValidException then return ProblemDetail`() {
-        val exception: MethodArgumentNotValidException = mock()
+    fun `when PropertyReferenceException then return ProblemDetail`() {
+        val exception: PropertyReferenceException = mock()
         problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.BAD_REQUEST)
-    }
-
-    @Test
-    fun `when MethodArgumentTypeMismatchException then return ProblemDetail`() {
-        val exception: MethodArgumentTypeMismatchException = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.BAD_REQUEST)
-    }
-
-    @Test
-    fun `when generic Exception then return ProblemDetail`() {
-        val exception: Exception = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

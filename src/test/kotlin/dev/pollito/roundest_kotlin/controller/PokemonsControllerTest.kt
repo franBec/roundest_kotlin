@@ -1,7 +1,5 @@
 package dev.pollito.roundest_kotlin.controller
 
-import dev.pollito.roundest_kotlin.model.PokemonSortProperty
-import dev.pollito.roundest_kotlin.model.SortDirection
 import dev.pollito.roundest_kotlin.service.PokemonService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -10,7 +8,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
-import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 
 @ExtendWith(MockitoExtension::class)
@@ -24,9 +21,21 @@ class PokemonsControllerTest {
 
     @Test
     fun `when findAll then return OK`() {
-        whenever(pokemonService.findAll(any<String>(), any<PageRequest>(), any<Boolean>())).thenReturn(mock())
+        whenever(pokemonService.findAll(
+            any<String>(),
+            any<Int>(),
+            any<Int>(),
+            any<List<String>>(),
+            any<Boolean>()
+        )).thenReturn(mock())
 
-        val response = pokemonsController.findAll("Bulbasur",0, 10, PokemonSortProperty.ID, SortDirection.ASC, true)
+        val response = pokemonsController.findAll(
+            "Bulbasur",
+            0,
+            10,
+            emptyList(),
+            true
+        )
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertNotNull(response.body)

@@ -13,7 +13,6 @@ import org.mockito.Mock
 import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -33,29 +32,46 @@ class PokemonServiceTest {
     private var pokemonModelMapper: PokemonModelMapper = Mappers.getMapper(PokemonModelMapper::class.java)
 
     @Test
+    fun `when findAll random then return Pokemons`() {
+        whenever(pokemonRepository.findByIds(any<List<Long>>())).thenReturn(emptyList())
+
+        assertNotNull(pokemonService.findAll(
+            null,
+            0,
+            10,
+            emptyList(),
+            true
+        ))
+    }
+
+    @Test
     fun `when findAll then return Pokemons`() {
         whenever(pokemonRepository.findAll(any<PageRequest>()))
             .thenReturn(PageImpl(emptyList(), PageRequest.of(0, 10), 0))
 
-        assertNotNull(pokemonService.findAll(null, mock(), false))
+        assertNotNull(pokemonService.findAll(
+            null,
+            0,
+            10,
+            emptyList(),
+            false
+        ))
     }
 
-    @Test
-    fun `when findAll random then return Pokemons`() {
-        whenever(pokemonRepository.findByIds(any<List<Long>>())).thenReturn(emptyList())
 
-        val pageRequest: PageRequest = mock()
-        whenever(pageRequest.pageSize).thenReturn(2)
-
-        assertNotNull(pokemonService.findAll(null, pageRequest, true))
-    }
 
     @Test
     fun `when findAll with name then return Pokemons`(){
         whenever(pokemonRepository.findByNameContainingIgnoreCase(any<String>(), any<PageRequest>()))
             .thenReturn(PageImpl(emptyList(), PageRequest.of(0, 10), 0))
 
-        assertNotNull(pokemonService.findAll("abra", mock(), false))
+        assertNotNull(pokemonService.findAll(
+            "abra",
+            0,
+            10,
+            emptyList(),
+            false
+        ))
     }
 
     @Test

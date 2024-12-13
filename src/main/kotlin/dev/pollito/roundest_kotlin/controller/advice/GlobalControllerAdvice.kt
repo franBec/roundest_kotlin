@@ -2,10 +2,11 @@ package dev.pollito.roundest_kotlin.controller.advice
 
 import dev.pollito.roundest_kotlin.aspect.LogAspect
 import io.opentelemetry.api.trace.Span
+import jakarta.validation.ConstraintViolationException
 import org.slf4j.LoggerFactory
+import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
@@ -29,14 +30,14 @@ class GlobalControllerAdvice {
         }
     }
 
-    @ExceptionHandler(NoResourceFoundException::class)
-    fun handle(e: NoResourceFoundException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handle(e: ConstraintViolationException): ProblemDetail {
+        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handle(e: MethodArgumentNotValidException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(Exception::class)
+    fun handle(e: Exception): ProblemDetail {
+        return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException::class)
@@ -44,13 +45,18 @@ class GlobalControllerAdvice {
         return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
     }
 
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handle(e: NoResourceFoundException): ProblemDetail {
+        return buildProblemDetail(e, HttpStatus.NOT_FOUND)
+    }
+
     @ExceptionHandler(NoSuchElementException::class)
     fun handle(e: NoSuchElementException): ProblemDetail {
         return buildProblemDetail(e, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(Exception::class)
-    fun handle(e: Exception): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(PropertyReferenceException::class)
+    fun handle(e: PropertyReferenceException): ProblemDetail {
+        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
     }
 }

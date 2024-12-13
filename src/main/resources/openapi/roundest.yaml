@@ -3,7 +3,7 @@ info:
   title: roundest API
   description:
     A RESTful API for "The Roundest Pokémon" programming exercise. Only 1st Gen
-    Pokémon.
+    Pokémon
   version: 1.0.0
   contact:
     name: Pollito
@@ -20,16 +20,15 @@ paths:
       operationId: findAll
       parameters:
         - description:
-            Use this parameter to filter pokémon by checking if provided string
-            is part of a name (all ignore case). If not used, no filtering will
-            be done.
+            Pokémon filtering by checking if provided string is part of a name
+            (all ignore case). If not used, no filtering will be done
           in: query
           name: name
           schema:
-            minLength: 3
+            minLength: 1
             maxLength: 10
             type: string
-        - description: Use this parameter to specify the page of your request
+        - description: Zero-based page index (0..N)
           in: query
           name: pageNumber
           schema:
@@ -37,9 +36,7 @@ paths:
             minimum: 0
             maximum: 2147483647
             type: integer
-        - description:
-            Use this parameter to specify a pagination limit (number of results
-            per page) for your request
+        - description: Size of the page to be returned
           in: query
           name: pageSize
           schema:
@@ -47,22 +44,20 @@ paths:
             maximum: 10
             minimum: 1
             type: integer
-        - description:
-            Use this parameter to specify the property by which you want to sort
-            the results of your request
+        - description: >
+            Sorting criteria in the format `field:direction`. Specify multiple
+            sort criteria by repeating the `sort` query parameter. For example:
+            `?pageSort=votes:desc&pageSort=id:asc`
+          explode: true
           in: query
-          name: sortProperty
+          name: pageSort
           schema:
-            $ref: "#/components/schemas/PokemonSortProperty"
+            default: [id:asc]
+            items:
+              type: string
+            type: array
         - description:
-            Use this parameter to specify the direction (asc or desc) of your
-            request results
-          in: query
-          name: sortDirection
-          schema:
-            $ref: "#/components/schemas/SortDirection"
-        - description:
-            when this parameter is true, will bring (pageSize) random results,
+            When this parameter is true, will bring (pageSize) random results,
             ignoring all other parameters except for pageSize
           in: query
           name: random
@@ -141,11 +136,11 @@ components:
     Error:
       properties:
         detail:
-          description: Description of the problem.
+          description: Description of the problem
           example: No value present
           type: string
         instance:
-          description: The endpoint where the problem was encountered.
+          description: The endpoint where the problem was encountered
           example: "/generate"
           type: string
         status:
@@ -153,26 +148,25 @@ components:
           example: 500
           type: integer
         title:
-          description: A short headline of the problem.
+          description: A short headline of the problem
           example: "NoSuchElementException"
           type: string
         timestamp:
-          description: ISO 8601 Date.
+          description: ISO 8601 Date
           example: "2024-01-04T15:30:00Z"
           type: string
         trace:
-          description: opentelemetry TraceID, a unique identifier.
+          description: opentelemetry TraceID, a unique identifier
           example: "0c6a41e22fe6478cc391908406ca9b8d"
           type: string
         type:
           description:
             used to point the client to documentation where it is explained
-            clearly what happened and why.
+            clearly what happened and why
           example: "about:blank"
           type: string
       type: object
     Pageable:
-      type: object
       properties:
         pageNumber:
           description: Current page number (starts from 0)
@@ -186,6 +180,21 @@ components:
           minimum: 0
           maximum: 2147483647
           type: integer
+      type: object
+    PaginationResponse:
+      properties:
+        content:
+          items: {}
+          type: array
+        pageable:
+          $ref: "#/components/schemas/Pageable"
+        totalElements:
+          default: 0
+          description: Total number of items that meet the criteria
+          example: 10
+          format: int64
+          type: integer
+      type: object
     Pokemon:
       properties:
         id:
@@ -213,23 +222,13 @@ components:
           type: integer
       type: object
     Pokemons:
-      properties:
-        content:
-          type: array
-          items:
-            $ref: "#/components/schemas/Pokemon"
-        pageable:
-          $ref: "#/components/schemas/Pageable"
-        totalElements:
-          description: Total number of items that meet the criteria
-          example: 10
-          type: integer
+      allOf:
+        - $ref: "#/components/schemas/PaginationResponse"
+        - type: object
+          properties:
+            content:
+              default: []
+              items:
+                $ref: "#/components/schemas/Pokemon"
+              type: array
       type: object
-    PokemonSortProperty:
-      enum: [id, name, votes]
-      default: id
-      type: string
-    SortDirection:
-      type: string
-      enum: [ASC, DESC]
-      default: ASC
