@@ -1,33 +1,28 @@
 package dev.pollito.roundest_kotlin.controller
 
 import dev.pollito.roundest_kotlin.service.PokemonService
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.*
 import org.springframework.http.HttpStatus
 
-@ExtendWith(MockitoExtension::class)
 class PokemonsControllerTest {
 
-    @InjectMocks
-    private lateinit var pokemonsController: PokemonsController
-
-    @Mock
-    private lateinit var pokemonService: PokemonService
+    private var pokemonService: PokemonService = mockk()
+    private var pokemonsController = PokemonsController(pokemonService)
 
     @Test
     fun `when findAll then return OK`() {
-        whenever(pokemonService.findAll(
-            any<String>(),
-            any<Int>(),
-            any<Int>(),
-            any<List<String>>(),
-            any<Boolean>()
-        )).thenReturn(mock())
+        every {
+            pokemonService.findAll(
+                any<String>(),
+                any<Int>(),
+                any<Int>(),
+                any<List<String>>(),
+                any<Boolean>()
+            )
+        } returns mockk()
 
         val response = pokemonsController.findAll(
             "Bulbasur",
@@ -43,7 +38,9 @@ class PokemonsControllerTest {
 
     @Test
     fun `when findById then return OK`(){
-        whenever(pokemonService.findById(any<Long>())).thenReturn(mock())
+        every {
+            pokemonService.findById(any<Long>())
+        } returns mockk()
 
         val response = pokemonsController.findById(1L)
 
@@ -53,6 +50,7 @@ class PokemonsControllerTest {
 
     @Test
     fun `when incrementPokemonVotes then return NO_CONTENT`() {
+
         doNothing().whenever(pokemonService).incrementPokemonVotes(any<Long>())
 
         val response = pokemonsController.incrementPokemonVotes(1L)
