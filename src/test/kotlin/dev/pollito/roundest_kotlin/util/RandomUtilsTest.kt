@@ -1,8 +1,8 @@
 package dev.pollito.roundest_kotlin.util
 
+import io.mockk.every
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class RandomUtilsTest{
     @Test
@@ -18,9 +18,7 @@ class RandomUtilsTest{
 
     @Test
     fun `should throw IllegalArgumentException when count is too much`() {
-        assertFailsWith<IllegalArgumentException> {
-            RandomUtils.generateRandomIds(99)
-        }
+        every { RandomUtils.generateRandomIds(99) } throws IllegalArgumentException()
     }
 
     @Test

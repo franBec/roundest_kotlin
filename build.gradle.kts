@@ -92,10 +92,10 @@ tasks.named<JavaCompile>("compileJava") {
 	dependsOn("openApiGenerate")
 }
 
-/*tasks.named<Test>("test") {
-	dependsOn("pitest")
+tasks.named<Test>("test") {
+//	dependsOn("pitest")
 	useJUnitPlatform()
-}*/
+}
 
 tasks.configureEach {
 	if (name == "kaptGenerateStubsKotlin"){
