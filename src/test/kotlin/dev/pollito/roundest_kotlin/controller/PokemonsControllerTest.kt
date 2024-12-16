@@ -53,6 +53,6 @@ class PokemonsControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
         assertNull(response.body)
-        verify { pokemonService.incrementPokemonVotes(any()) }
+        verify { pokemonService.incrementPokemonVotes(any<Long>()) }
     }
 }

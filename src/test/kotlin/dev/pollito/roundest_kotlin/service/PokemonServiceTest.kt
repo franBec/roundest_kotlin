@@ -55,7 +55,7 @@ class PokemonServiceTest {
     @Test
     fun `when findAll with name then return Pokemons`() {
         every {
-            pokemonRepository.findByNameContainingIgnoreCase(any(), any<PageRequest>())
+            pokemonRepository.findByNameContainingIgnoreCase(any<String>(), any<PageRequest>())
         } returns PageImpl(emptyList(), PageRequest.of(0, 10), 0)
 
         assertNotNull(
@@ -72,7 +72,7 @@ class PokemonServiceTest {
     @Test
     fun `when findById then return Pokemon`() {
         val pokemon = Pokemon(name = "Bulbasaur", spriteUrl = "url")
-        every { pokemonRepository.findById(any()) } returns Optional.of(pokemon)
+        every { pokemonRepository.findById(any<Long>()) } returns Optional.of(pokemon)
 
         assertNotNull(pokemonService.findById(1L))
     }
@@ -82,13 +82,13 @@ class PokemonServiceTest {
         val pokemon = Pokemon(name = "Bulbasaur", spriteUrl = "url")
         val pokemonInitialVotes = pokemon.votes
 
-        every { pokemonRepository.findById(any()) } returns Optional.of(pokemon)
-        every { pokemonRepository.save(any()) } returns pokemon
+        every { pokemonRepository.findById(any<Long>()) } returns Optional.of(pokemon)
+        every { pokemonRepository.save(any<Pokemon>()) } returns pokemon
 
         pokemonService.incrementPokemonVotes(1L)
         assertEquals(pokemonInitialVotes + 1, pokemon.votes)
 
-        verify { pokemonRepository.findById(any()) }
-        verify { pokemonRepository.save(any()) }
+        verify { pokemonRepository.findById(any<Long>()) }
+        verify { pokemonRepository.save(any<Pokemon>()) }
     }
 }

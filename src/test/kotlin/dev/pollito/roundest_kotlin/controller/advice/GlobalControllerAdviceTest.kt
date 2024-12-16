@@ -5,7 +5,6 @@ import io.mockk.mockk
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.springframework.data.mapping.PropertyReferenceException
@@ -15,28 +14,21 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 
 class GlobalControllerAdviceTest {
 
-    private lateinit var advice: GlobalControllerAdvice
-    private lateinit var mockTimestampUtils: TimestampUtils
-    private lateinit var mockLogger: Logger
-
-    @BeforeEach
-    fun setup() {
-        mockTimestampUtils = mockk(relaxed = true)
-        mockLogger = mockk(relaxed = true)
-        advice = GlobalControllerAdvice(mockTimestampUtils, mockLogger)
-    }
+    private val mockTimestampUtils: TimestampUtils = mockk(relaxed = true)
+    private val mockLogger: Logger = mockk(relaxed = true)
+    private val globalControllerAdvice: GlobalControllerAdvice = GlobalControllerAdvice(mockTimestampUtils, mockLogger)
 
     private fun assertProblemDetail(
         exception: Exception,
         expectedStatus: HttpStatus
     ) {
         val problemDetail = when (exception) {
-            is ConstraintViolationException -> advice.handle(exception)
-            is MethodArgumentTypeMismatchException -> advice.handle(exception)
-            is NoResourceFoundException -> advice.handle(exception)
-            is NoSuchElementException -> advice.handle(exception)
-            is PropertyReferenceException -> advice.handle(exception)
-            else -> advice.handle(exception)
+            is ConstraintViolationException -> globalControllerAdvice.handle(exception)
+            is MethodArgumentTypeMismatchException -> globalControllerAdvice.handle(exception)
+            is NoResourceFoundException -> globalControllerAdvice.handle(exception)
+            is NoSuchElementException -> globalControllerAdvice.handle(exception)
+            is PropertyReferenceException -> globalControllerAdvice.handle(exception)
+            else -> globalControllerAdvice.handle(exception)
         }
 
         assertEquals(expectedStatus.value(), problemDetail.status)
