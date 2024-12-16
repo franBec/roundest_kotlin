@@ -12,5 +12,5 @@ interface PokemonService {
         random: Boolean
     ): Pokemons
     fun findById(id: Long): Pokemon
-    fun incrementPokemonVotes(id: Long): Unit
+    fun incrementPokemonVotes(id: Long)
 }
