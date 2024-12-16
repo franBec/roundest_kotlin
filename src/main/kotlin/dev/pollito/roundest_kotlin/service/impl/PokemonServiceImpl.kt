@@ -46,11 +46,10 @@ class PokemonServiceImpl(
         return pokemonModelMapper.map(pokemonRepository.findById(id).orElseThrow())
     }
 
-    override fun incrementPokemonVotes(id: Long): Void? {
+    override fun incrementPokemonVotes(id: Long) {
         val pokemon = pokemonRepository.findById(id).orElseThrow()
         pokemon.votes += 1
         pokemonRepository.save(pokemon)
-        return null
     }
 
     private fun getRandomPokemons(size: Int): Pokemons {

@@ -1,8 +1,9 @@
 package dev.pollito.roundest_kotlin.controller.advice
 
-import dev.pollito.roundest_kotlin.aspect.LogAspect
+import dev.pollito.roundest_kotlin.util.TimestampUtils
 import io.opentelemetry.api.trace.Span
 import jakarta.validation.ConstraintViolationException
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.http.HttpStatus
@@ -11,23 +12,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.resource.NoResourceFoundException
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 
 @RestControllerAdvice
-class GlobalControllerAdvice {
-    companion object {
-        private val log = LoggerFactory.getLogger(LogAspect::class.java)
-
-        private fun buildProblemDetail(e: Exception, status: HttpStatus): ProblemDetail {
-            val exceptionSimpleName = e.javaClass.simpleName
-            log.error("{} being handled", exceptionSimpleName, e)
-            val problemDetail = ProblemDetail.forStatusAndDetail(status, e.localizedMessage)
-            problemDetail.title = exceptionSimpleName
-            problemDetail.setProperty("timestamp", DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
-            problemDetail.setProperty("trace", Span.current().spanContext.traceId)
-            return problemDetail
-        }
+class GlobalControllerAdvice(
+    private val timestampUtils: TimestampUtils = object : TimestampUtils {},
+    private val log: Logger = LoggerFactory.getLogger(GlobalControllerAdvice::class.java)
+) {
+    private fun buildProblemDetail(
+        e: Exception,
+        status: HttpStatus
+    ): ProblemDetail {
+        val exceptionSimpleName = e.javaClass.simpleName
+        log.error("{} being handled", exceptionSimpleName, e)
+        val problemDetail = ProblemDetail.forStatusAndDetail(status, e.localizedMessage)
+        problemDetail.title = exceptionSimpleName
+        problemDetail.setProperty("timestamp", timestampUtils.now())
+        problemDetail.setProperty("trace", Span.current().spanContext.traceId)
+        return problemDetail
     }
 
     @ExceptionHandler(ConstraintViolationException::class)

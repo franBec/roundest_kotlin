@@ -1,36 +1,30 @@
 package dev.pollito.roundest_kotlin.controller
 
 import dev.pollito.roundest_kotlin.service.PokemonService
+import io.mockk.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.*
 import org.springframework.http.HttpStatus
 
-@ExtendWith(MockitoExtension::class)
 class PokemonsControllerTest {
 
-    @InjectMocks
-    private lateinit var pokemonsController: PokemonsController
-
-    @Mock
-    private lateinit var pokemonService: PokemonService
+    private val pokemonService: PokemonService = mockk()
+    private val pokemonsController = PokemonsController(pokemonService)
 
     @Test
     fun `when findAll then return OK`() {
-        whenever(pokemonService.findAll(
-            any<String>(),
-            any<Int>(),
-            any<Int>(),
-            any<List<String>>(),
-            any<Boolean>()
-        )).thenReturn(mock())
+        every {
+            pokemonService.findAll(
+                any<String>(),
+                any<Int>(),
+                any<Int>(),
+                any<List<String>>(),
+                any<Boolean>()
+            )
+        } returns mockk()
 
         val response = pokemonsController.findAll(
-            "Bulbasur",
+            "Bulbasaur",
             0,
             10,
             emptyList(),
@@ -42,8 +36,8 @@ class PokemonsControllerTest {
     }
 
     @Test
-    fun `when findById then return OK`(){
-        whenever(pokemonService.findById(any<Long>())).thenReturn(mock())
+    fun `when findById then return OK`() {
+        every { pokemonService.findById(any<Long>()) } returns mockk()
 
         val response = pokemonsController.findById(1L)
 
@@ -53,13 +47,12 @@ class PokemonsControllerTest {
 
     @Test
     fun `when incrementPokemonVotes then return NO_CONTENT`() {
-        doNothing().whenever(pokemonService).incrementPokemonVotes(any<Long>())
+        justRun { pokemonService.incrementPokemonVotes(any<Long>()) }
 
         val response = pokemonsController.incrementPokemonVotes(1L)
 
         assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
         assertNull(response.body)
-
-        verify(pokemonService).incrementPokemonVotes(any<Long>())
+        verify { pokemonService.incrementPokemonVotes(any<Long>()) }
     }
 }

@@ -1,69 +1,70 @@
 package dev.pollito.roundest_kotlin.controller.advice
 
+import dev.pollito.roundest_kotlin.util.TimestampUtils
+import io.mockk.mockk
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mockito.mock
-import org.mockito.junit.jupiter.MockitoExtension
+import org.slf4j.Logger
 import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.http.HttpStatus
-import org.springframework.http.ProblemDetail
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.resource.NoResourceFoundException
 
-@ExtendWith(MockitoExtension::class)
 class GlobalControllerAdviceTest {
-    @InjectMocks
-    private lateinit var globalControllerAdvice: GlobalControllerAdvice
 
-    companion object {
-        private fun problemDetailAssertions(
-            response: ProblemDetail, e: Exception, httpStatus: HttpStatus
-        ) {
-            assertEquals(httpStatus.value(), response.status)
-            assertEquals(e.javaClass.simpleName, response.title)
-            assertNotNull(response.properties)
-            assertNotNull(response.properties!!["timestamp"])
-            assertNotNull(response.properties!!["trace"])
+    private val mockTimestampUtils: TimestampUtils = mockk(relaxed = true)
+    private val mockLogger: Logger = mockk(relaxed = true)
+    private val globalControllerAdvice: GlobalControllerAdvice = GlobalControllerAdvice(mockTimestampUtils, mockLogger)
+
+    private fun assertProblemDetail(
+        exception: Exception,
+        expectedStatus: HttpStatus
+    ) {
+        val problemDetail = when (exception) {
+            is ConstraintViolationException -> globalControllerAdvice.handle(exception)
+            is MethodArgumentTypeMismatchException -> globalControllerAdvice.handle(exception)
+            is NoResourceFoundException -> globalControllerAdvice.handle(exception)
+            is NoSuchElementException -> globalControllerAdvice.handle(exception)
+            is PropertyReferenceException -> globalControllerAdvice.handle(exception)
+            else -> globalControllerAdvice.handle(exception)
         }
+
+        assertEquals(expectedStatus.value(), problemDetail.status)
+        assertEquals(exception.javaClass.simpleName, problemDetail.title)
+        assertNotNull(problemDetail.detail)
+        assertNotNull(problemDetail.properties!!["timestamp"])
+        assertNotNull(problemDetail.properties!!["trace"])
     }
 
     @Test
-    fun `when ConstraintViolationException then return ProblemDetail`() {
-        val exception: ConstraintViolationException = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.BAD_REQUEST)
+    fun `handle ConstraintViolationException returns BAD_REQUEST ProblemDetail`() {
+        assertProblemDetail(mockk<ConstraintViolationException>(relaxed = true), HttpStatus.BAD_REQUEST)
     }
 
     @Test
-    fun `when generic Exception then return ProblemDetail`() {
-        val exception: Exception = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.INTERNAL_SERVER_ERROR)
+    fun `handle generic Exception returns INTERNAL_SERVER_ERROR ProblemDetail`() {
+        assertProblemDetail(mockk<Exception>(relaxed = true), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     @Test
-    fun `when MethodArgumentTypeMismatchException then return ProblemDetail`() {
-        val exception: MethodArgumentTypeMismatchException = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.BAD_REQUEST)
+    fun `handle MethodArgumentTypeMismatchException returns BAD_REQUEST ProblemDetail`() {
+        assertProblemDetail(mockk<MethodArgumentTypeMismatchException>(relaxed = true), HttpStatus.BAD_REQUEST)
     }
 
     @Test
-    fun `when NoResourceFoundException then return ProblemDetail`() {
-        val exception: NoResourceFoundException = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.NOT_FOUND)
+    fun `handle NoResourceFoundException returns NOT_FOUND ProblemDetail`() {
+        assertProblemDetail(mockk<NoResourceFoundException>(relaxed = true), HttpStatus.NOT_FOUND)
     }
 
     @Test
-    fun `when NoSuchElementException then return ProblemDetail`() {
-        val exception: NoSuchElementException = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.NOT_FOUND)
+    fun `handle NoSuchElementException returns NOT_FOUND ProblemDetail`() {
+        assertProblemDetail(mockk<NoSuchElementException>(relaxed = true), HttpStatus.NOT_FOUND)
     }
 
     @Test
-    fun `when PropertyReferenceException then return ProblemDetail`() {
-        val exception: PropertyReferenceException = mock()
-        problemDetailAssertions(globalControllerAdvice.handle(exception), exception, HttpStatus.BAD_REQUEST)
+    fun `handle PropertyReferenceException returns BAD_REQUEST ProblemDetail`() {
+        assertProblemDetail(mockk<PropertyReferenceException>(relaxed = true), HttpStatus.BAD_REQUEST)
     }
 }

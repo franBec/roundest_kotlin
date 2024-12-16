@@ -2,7 +2,7 @@ package dev.pollito.roundest_kotlin.util
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.assertThrows
 
 class RandomUtilsTest{
     @Test
@@ -18,7 +18,7 @@ class RandomUtilsTest{
 
     @Test
     fun `should throw IllegalArgumentException when count is too much`() {
-        assertFailsWith<IllegalArgumentException> {
+        assertThrows<IllegalArgumentException>{
             RandomUtils.generateRandomIds(99)
         }
     }

@@ -61,10 +61,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
 	runtimeOnly("com.h2database:h2")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-	testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("com.ninja-squad:springmockk:4.0.2")
+	testImplementation("org.junit.jupiter:junit-jupiter-engine:5.11.3")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+		exclude(group = "org.mockito", module = "mockito-core")
+	}
 }
 
 kapt {
