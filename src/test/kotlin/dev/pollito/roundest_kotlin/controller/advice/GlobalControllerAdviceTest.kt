@@ -1,5 +1,6 @@
 package dev.pollito.roundest_kotlin.controller.advice
 
+import dev.pollito.roundest_kotlin.util.TimestampUtils
 import io.mockk.mockk
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -15,14 +16,14 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 class GlobalControllerAdviceTest {
 
     private lateinit var advice: GlobalControllerAdvice
-    private lateinit var mockTimestampProvider: TimestampProvider
+    private lateinit var mockTimestampUtils: TimestampUtils
     private lateinit var mockLogger: Logger
 
     @BeforeEach
     fun setup() {
-        mockTimestampProvider = mockk(relaxed = true)
+        mockTimestampUtils = mockk(relaxed = true)
         mockLogger = mockk(relaxed = true)
-        advice = GlobalControllerAdvice(mockTimestampProvider, mockLogger)
+        advice = GlobalControllerAdvice(mockTimestampUtils, mockLogger)
     }
 
     private fun assertProblemDetail(

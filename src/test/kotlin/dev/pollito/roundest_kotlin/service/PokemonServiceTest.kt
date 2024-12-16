@@ -85,7 +85,7 @@ class PokemonServiceTest {
         every { pokemonRepository.findById(any()) } returns Optional.of(pokemon)
         every { pokemonRepository.save(any()) } returns pokemon
 
-        assertNull(pokemonService.incrementPokemonVotes(1L))
+        pokemonService.incrementPokemonVotes(1L)
         assertEquals(pokemonInitialVotes + 1, pokemon.votes)
 
         verify { pokemonRepository.findById(any()) }
