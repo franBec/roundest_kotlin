@@ -93,7 +93,7 @@ tasks.named<JavaCompile>("compileJava") {
 }
 
 tasks.named<Test>("test") {
-//	dependsOn("pitest")
+	dependsOn("pitest")
 	useJUnitPlatform()
 }
 
@@ -123,7 +123,6 @@ openApiGenerate {
     outputDir.set(layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString())
 }
 
-/*
 pitest {
 	junit5PluginVersion.set("1.2.1")
 	outputFormats.set(listOf("HTML"))
@@ -137,4 +136,4 @@ pitest {
 	targetTests.set(listOf("${group}.${project.name}.*"))
 	timestampedReports.set(false)
 	useClasspathFile.set(true)
-}*/
+}
