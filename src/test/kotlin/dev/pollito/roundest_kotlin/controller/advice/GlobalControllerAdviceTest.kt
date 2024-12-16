@@ -2,7 +2,6 @@ package dev.pollito.roundest_kotlin.controller.advice
 
 import dev.pollito.roundest_kotlin.util.TimestampUtils
 import io.mockk.mockk
-import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -23,7 +22,7 @@ class GlobalControllerAdviceTest {
         expectedStatus: HttpStatus
     ) {
         val problemDetail = when (exception) {
-            is ConstraintViolationException -> globalControllerAdvice.handle(exception)
+            is IllegalArgumentException -> globalControllerAdvice.handle(exception)
             is MethodArgumentTypeMismatchException -> globalControllerAdvice.handle(exception)
             is NoResourceFoundException -> globalControllerAdvice.handle(exception)
             is NoSuchElementException -> globalControllerAdvice.handle(exception)
@@ -40,7 +39,7 @@ class GlobalControllerAdviceTest {
 
     @Test
     fun `handle ConstraintViolationException returns BAD_REQUEST ProblemDetail`() {
-        assertProblemDetail(mockk<ConstraintViolationException>(relaxed = true), HttpStatus.BAD_REQUEST)
+        assertProblemDetail(mockk<IllegalArgumentException>(relaxed = true), HttpStatus.BAD_REQUEST)
     }
 
     @Test
