@@ -2,7 +2,6 @@ package dev.pollito.roundest_kotlin.controller.advice
 
 import dev.pollito.roundest_kotlin.util.TimestampUtils
 import io.opentelemetry.api.trace.Span
-import jakarta.validation.ConstraintViolationException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.mapping.PropertyReferenceException
@@ -31,14 +30,14 @@ class GlobalControllerAdvice(
         return problemDetail
     }
 
-    @ExceptionHandler(ConstraintViolationException::class)
-    fun handle(e: ConstraintViolationException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
-    }
-
     @ExceptionHandler(Exception::class)
     fun handle(e: Exception): ProblemDetail {
         return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handle(e: IllegalArgumentException): ProblemDetail {
+        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException::class)
