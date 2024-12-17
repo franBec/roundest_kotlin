@@ -21,11 +21,10 @@ paths:
       parameters:
         - description:
             Pokémon filtering by checking if provided string is part of a name
-            (all ignore case). If not used, no filtering will be done
+            (all ignore case). If not used or empty, no filtering will be done
           in: query
           name: name
           schema:
-            minLength: 1
             maxLength: 10
             type: string
         - description: Zero-based page index (0..N)
