@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 interface PokemonModelMapper {
-    fun map(pokemon: Pokemon): dev.pollito.roundest_kotlin.model.Pokemon
-    fun map(pokemonPage: Page<Pokemon>?): Pokemons
+  fun map(pokemon: Pokemon): dev.pollito.roundest_kotlin.model.Pokemon
+
+  fun map(pokemonPage: Page<Pokemon>?): Pokemons
 }

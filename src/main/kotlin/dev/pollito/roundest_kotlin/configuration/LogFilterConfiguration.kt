@@ -7,13 +7,13 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class LogFilterConfiguration {
-    @Bean
-    fun loggingFilter(): FilterRegistrationBean<LogFilter> {
-        val registrationBean: FilterRegistrationBean<LogFilter> = FilterRegistrationBean<LogFilter>()
+  @Bean
+  fun loggingFilter(): FilterRegistrationBean<LogFilter> {
+    val registrationBean: FilterRegistrationBean<LogFilter> = FilterRegistrationBean<LogFilter>()
 
-        registrationBean.filter = LogFilter()
-        registrationBean.addUrlPatterns("/*")
+    registrationBean.filter = LogFilter()
+    registrationBean.addUrlPatterns("/*")
 
-        return registrationBean
-    }
+    return registrationBean
+  }
 }

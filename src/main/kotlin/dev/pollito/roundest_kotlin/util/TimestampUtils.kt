@@ -4,5 +4,5 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 interface TimestampUtils {
-    fun now(): String = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
+  fun now(): String = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
 }

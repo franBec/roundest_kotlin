@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConfigurationProperties(prefix = "cors")
 class CorsConfigurationProperties {
-    var allowedOrigins: List<String>? = null
-    var allowedMethods: List<String>? = null
-    var allowedHeaders: String? = null
-    var allowCredentials: Boolean? = null
+  var allowedOrigins: List<String>? = null
+  var allowedMethods: List<String>? = null
+  var allowedHeaders: String? = null
+  var allowCredentials: Boolean? = null
 }

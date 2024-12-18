@@ -9,33 +9,23 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class PokemonsController(
-    private val pokemonService: PokemonService
-): PokemonsApi{
-    override fun findAll(
-        name: String?,
-        pageNumber: Int,
-        pageSize: Int,
-        pageSort: List<String>,
-        random: Boolean
-    ): ResponseEntity<Pokemons> {
-        return ResponseEntity.ok(
-            pokemonService.findAll(
-                name,
-                pageNumber,
-                pageSize,
-                pageSort,
-                random
-            )
-        )
-    }
+class PokemonsController(private val pokemonService: PokemonService) : PokemonsApi {
+  override fun findAll(
+      name: String?,
+      pageNumber: Int,
+      pageSize: Int,
+      pageSort: List<String>,
+      random: Boolean
+  ): ResponseEntity<Pokemons> {
+    return ResponseEntity.ok(pokemonService.findAll(name, pageNumber, pageSize, pageSort, random))
+  }
 
-    override fun findById(id: Long): ResponseEntity<Pokemon> {
-        return ResponseEntity.ok(pokemonService.findById(id))
-    }
+  override fun findById(id: Long): ResponseEntity<Pokemon> {
+    return ResponseEntity.ok(pokemonService.findById(id))
+  }
 
-    override fun incrementPokemonVotes(id: Long): ResponseEntity<Void> {
-        pokemonService.incrementPokemonVotes(id)
-        return ResponseEntity(HttpStatus.NO_CONTENT)
-    }
+  override fun incrementPokemonVotes(id: Long): ResponseEntity<Void> {
+    pokemonService.incrementPokemonVotes(id)
+    return ResponseEntity(HttpStatus.NO_CONTENT)
+  }
 }

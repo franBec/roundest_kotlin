@@ -17,46 +17,43 @@ class GlobalControllerAdvice(
     private val timestampUtils: TimestampUtils = object : TimestampUtils {},
     private val log: Logger = LoggerFactory.getLogger(GlobalControllerAdvice::class.java)
 ) {
-    private fun buildProblemDetail(
-        e: Exception,
-        status: HttpStatus
-    ): ProblemDetail {
-        val exceptionSimpleName = e.javaClass.simpleName
-        log.error("{} being handled", exceptionSimpleName, e)
-        val problemDetail = ProblemDetail.forStatusAndDetail(status, e.localizedMessage)
-        problemDetail.title = exceptionSimpleName
-        problemDetail.setProperty("timestamp", timestampUtils.now())
-        problemDetail.setProperty("trace", Span.current().spanContext.traceId)
-        return problemDetail
-    }
+  private fun buildProblemDetail(e: Exception, status: HttpStatus): ProblemDetail {
+    val exceptionSimpleName = e.javaClass.simpleName
+    log.error("{} being handled", exceptionSimpleName, e)
+    val problemDetail = ProblemDetail.forStatusAndDetail(status, e.localizedMessage)
+    problemDetail.title = exceptionSimpleName
+    problemDetail.setProperty("timestamp", timestampUtils.now())
+    problemDetail.setProperty("trace", Span.current().spanContext.traceId)
+    return problemDetail
+  }
 
-    @ExceptionHandler(Exception::class)
-    fun handle(e: Exception): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+  @ExceptionHandler(Exception::class)
+  fun handle(e: Exception): ProblemDetail {
+    return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR)
+  }
 
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handle(e: IllegalArgumentException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
-    }
+  @ExceptionHandler(IllegalArgumentException::class)
+  fun handle(e: IllegalArgumentException): ProblemDetail {
+    return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
+  }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
-    fun handle(e: MethodArgumentTypeMismatchException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
-    }
+  @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+  fun handle(e: MethodArgumentTypeMismatchException): ProblemDetail {
+    return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
+  }
 
-    @ExceptionHandler(NoResourceFoundException::class)
-    fun handle(e: NoResourceFoundException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.NOT_FOUND)
-    }
+  @ExceptionHandler(NoResourceFoundException::class)
+  fun handle(e: NoResourceFoundException): ProblemDetail {
+    return buildProblemDetail(e, HttpStatus.NOT_FOUND)
+  }
 
-    @ExceptionHandler(NoSuchElementException::class)
-    fun handle(e: NoSuchElementException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.NOT_FOUND)
-    }
+  @ExceptionHandler(NoSuchElementException::class)
+  fun handle(e: NoSuchElementException): ProblemDetail {
+    return buildProblemDetail(e, HttpStatus.NOT_FOUND)
+  }
 
-    @ExceptionHandler(PropertyReferenceException::class)
-    fun handle(e: PropertyReferenceException): ProblemDetail {
-        return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
-    }
+  @ExceptionHandler(PropertyReferenceException::class)
+  fun handle(e: PropertyReferenceException): ProblemDetail {
+    return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
+  }
 }
