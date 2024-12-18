@@ -59,10 +59,7 @@ dependencies {
   }
 }
 
-kapt {
-  arguments { arg("mapstruct.defaultComponentModel", "spring") }
-  correctErrorTypes = true
-}
+kapt { correctErrorTypes = true }
 
 kotlin { compilerOptions { freeCompilerArgs.addAll("-Xjsr305=strict") } }
 
