@@ -70,12 +70,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pokemons"
+          headers:
+            X-Application-Name:
+              $ref: '#/components/headers/X-Application-Name'
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+          headers:
+            X-Application-Name:
+              $ref: '#/components/headers/X-Application-Name'
   /pokemons/{id}:
     get:
       tags:
@@ -97,12 +103,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pokemon"
+          headers:
+            X-Application-Name:
+              $ref: '#/components/headers/X-Application-Name'
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+          headers:
+            X-Application-Name:
+              $ref: '#/components/headers/X-Application-Name'
     patch:
       tags:
         - Pokemon
@@ -124,13 +136,24 @@ paths:
       responses:
         204:
           description: Pokémon vote count incremented +1 successfully
+          headers:
+            X-Application-Name:
+              $ref: '#/components/headers/X-Application-Name'
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+          headers:
+            X-Application-Name:
+              $ref: '#/components/headers/X-Application-Name'
 components:
+  headers:
+    X-Application-Name:
+      description: The name of the application
+      schema:
+        type: string
   schemas:
     Error:
       properties:
