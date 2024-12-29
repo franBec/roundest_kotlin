@@ -2,6 +2,7 @@ package dev.pollito.roundest_kotlin.controller.advice
 
 import dev.pollito.roundest_kotlin.util.TimestampUtils
 import io.opentelemetry.api.trace.Span
+import jakarta.validation.ConstraintViolationException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.mapping.PropertyReferenceException
@@ -19,7 +20,15 @@ class GlobalControllerAdvice(
 ) {
   private fun buildProblemDetail(e: Exception, status: HttpStatus): ProblemDetail {
     val exceptionSimpleName = e.javaClass.simpleName
-    log.error("{} being handled", exceptionSimpleName, e)
+
+    when {
+      status.is4xxClientError ->
+          log.warn("{} being handled as a client error", exceptionSimpleName, e)
+      status.is5xxServerError ->
+          log.error("{} being handled as a server error", exceptionSimpleName, e)
+      else -> log.info("{} being handled with status {}", exceptionSimpleName, status, e)
+    }
+
     val problemDetail = ProblemDetail.forStatusAndDetail(status, e.localizedMessage)
     problemDetail.title = exceptionSimpleName
     problemDetail.setProperty("timestamp", timestampUtils.now())
@@ -27,14 +36,14 @@ class GlobalControllerAdvice(
     return problemDetail
   }
 
+  @ExceptionHandler(ConstraintViolationException::class)
+  fun handle(e: ConstraintViolationException): ProblemDetail {
+    return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
+  }
+
   @ExceptionHandler(Exception::class)
   fun handle(e: Exception): ProblemDetail {
     return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR)
-  }
-
-  @ExceptionHandler(IllegalArgumentException::class)
-  fun handle(e: IllegalArgumentException): ProblemDetail {
-    return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException::class)
