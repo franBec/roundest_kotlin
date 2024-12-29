@@ -85,9 +85,41 @@ tasks.named<Test>("test") {
 
 tasks.configureEach {
   if (name == "kaptGenerateStubsKotlin" || name == "spotlessKotlin") {
-    dependsOn("openApiGenerate")
+    dependsOn("replaceValWithVar")
   }
 }
+
+val replaceValWithVar by
+    tasks.register<DefaultTask>("replaceValWithVar") {
+      group = "custom"
+      description = "Replaces all occurrences of 'val' with 'var' in generated models."
+
+      doLast {
+        val sourceDir =
+            file(
+                "build/generated/sources/openapi/src/main/kotlin/dev/pollito/roundest_kotlin/model")
+        if (sourceDir.exists()) {
+          sourceDir
+              .walkTopDown()
+              .filter { it.isFile && it.extension == "kt" }
+              .forEach { file ->
+                val originalContent = file.readText(Charsets.UTF_8)
+                val updatedContent = originalContent.replace("val ", "var ")
+
+                if (originalContent != updatedContent) {
+                  file.writeText(updatedContent, Charsets.UTF_8)
+                  logger.lifecycle("Modified: ${file.absolutePath}")
+                } else {
+                  logger.lifecycle("Unchanged: ${file.absolutePath}")
+                }
+              }
+        } else {
+          logger.lifecycle("Source directory does not exist: $sourceDir")
+        }
+      }
+    }
+
+tasks.named("openApiGenerate") { finalizedBy("replaceValWithVar") }
 
 openApiGenerate {
   apiPackage.set("${group}.${project.name}.api")
