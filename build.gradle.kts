@@ -29,10 +29,6 @@ version = "0.0.1-SNAPSHOT"
 
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 
-sourceSets {
-  main { java { srcDirs(layout.buildDirectory.dir("generated/sources/openapi/src/main/java")) } }
-}
-
 configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
 
 repositories { mavenCentral() }
@@ -86,9 +82,42 @@ tasks.named<Test>("test") {
 
 tasks.configureEach {
   if (name == "kaptGenerateStubsKotlin" || name == "spotlessKotlin") {
-    dependsOn("fabriktGenerate")
+    dependsOn("replaceValWithVar")
   }
 }
+
+val replaceValWithVar by
+    tasks.register<DefaultTask>("replaceValWithVar") {
+      group = "custom"
+      description =
+          "Replaces all occurrences of 'public val' with 'public var' in generated models."
+
+      doLast {
+        val sourceDir =
+            file(
+                "build/generated/sources/fabrikt/src/main/kotlin/dev/pollito/roundest_kotlin/models")
+        if (sourceDir.exists()) {
+          sourceDir
+              .walkTopDown()
+              .filter { it.isFile && it.extension == "kt" }
+              .forEach { file ->
+                val originalContent = file.readText(Charsets.UTF_8)
+                val updatedContent = originalContent.replace("public val", "public var")
+
+                if (originalContent != updatedContent) {
+                  file.writeText(updatedContent, Charsets.UTF_8)
+                  logger.lifecycle("Modified: ${file.absolutePath}")
+                } else {
+                  logger.lifecycle("Unchanged: ${file.absolutePath}")
+                }
+              }
+        } else {
+          logger.lifecycle("Source directory does not exist: $sourceDir")
+        }
+      }
+    }
+
+tasks.named("fabriktGenerate") { finalizedBy("replaceValWithVar") }
 
 fabrikt {
   generate("roundest") {
