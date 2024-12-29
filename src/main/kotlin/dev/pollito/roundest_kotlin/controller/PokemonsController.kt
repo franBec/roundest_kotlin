@@ -24,7 +24,7 @@ class PokemonsController(private val pokemonService: PokemonService) : PokemonsA
     return ResponseEntity.ok(pokemonService.findById(id))
   }
 
-  override fun incrementPokemonVotes(id: Long): ResponseEntity<Void> {
+  override fun incrementPokemonVotes(id: Long): ResponseEntity<Unit> {
     pokemonService.incrementPokemonVotes(id)
     return ResponseEntity(HttpStatus.NO_CONTENT)
   }

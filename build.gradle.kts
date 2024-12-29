@@ -27,7 +27,9 @@ version = "0.0.1-SNAPSHOT"
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 
 sourceSets {
-  main { java { srcDirs(layout.buildDirectory.dir("generated/sources/openapi/src/main/java")) } }
+  main {
+    kotlin { srcDirs(layout.buildDirectory.dir("generated/sources/openapi/src/main/kotlin")) }
+  }
 }
 
 configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
@@ -82,7 +84,7 @@ tasks.named<Test>("test") {
 }
 
 tasks.configureEach {
-  if (name == "kaptGenerateStubsKotlin") {
+  if (name == "kaptGenerateStubsKotlin" || name == "spotlessKotlin") {
     dependsOn("openApiGenerate")
   }
 }
@@ -99,7 +101,7 @@ openApiGenerate {
   generateApiDocumentation.set(false)
   generateModelTests.set(false)
   generateModelDocumentation.set(false)
-  generatorName.set("spring")
+  generatorName.set("kotlin-spring")
   inputSpec.set("$rootDir/src/main/resources/openapi/roundest.yaml")
   modelPackage.set("${group}.${project.name}.model")
   outputDir.set(layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString())
