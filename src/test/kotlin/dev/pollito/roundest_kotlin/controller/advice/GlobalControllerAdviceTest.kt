@@ -21,7 +21,6 @@ class GlobalControllerAdviceTest {
   private fun assertProblemDetail(exception: Exception, expectedStatus: HttpStatus) {
     val problemDetail =
         when (exception) {
-          is IllegalArgumentException -> globalControllerAdvice.handle(exception)
           is MethodArgumentTypeMismatchException -> globalControllerAdvice.handle(exception)
           is NoResourceFoundException -> globalControllerAdvice.handle(exception)
           is NoSuchElementException -> globalControllerAdvice.handle(exception)
@@ -34,11 +33,6 @@ class GlobalControllerAdviceTest {
     assertNotNull(problemDetail.detail)
     assertNotNull(problemDetail.properties!!["timestamp"])
     assertNotNull(problemDetail.properties!!["trace"])
-  }
-
-  @Test
-  fun `handle ConstraintViolationException returns BAD_REQUEST ProblemDetail`() {
-    assertProblemDetail(mockk<IllegalArgumentException>(relaxed = true), HttpStatus.BAD_REQUEST)
   }
 
   @Test

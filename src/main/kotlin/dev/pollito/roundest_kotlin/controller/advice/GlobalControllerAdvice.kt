@@ -32,11 +32,6 @@ class GlobalControllerAdvice(
     return buildProblemDetail(e, HttpStatus.INTERNAL_SERVER_ERROR)
   }
 
-  @ExceptionHandler(IllegalArgumentException::class)
-  fun handle(e: IllegalArgumentException): ProblemDetail {
-    return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
-  }
-
   @ExceptionHandler(MethodArgumentTypeMismatchException::class)
   fun handle(e: MethodArgumentTypeMismatchException): ProblemDetail {
     return buildProblemDetail(e, HttpStatus.BAD_REQUEST)
