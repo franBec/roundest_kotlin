@@ -1,3 +1,6 @@
+import ch.acanda.gradle.fabrikt.ControllerTargetOption
+import ch.acanda.gradle.fabrikt.ValidationLibraryOption
+
 val micrometerObservationVersion = "1.14.1"
 val micrometerTracingBridgeOtelVersion = "1.4.0"
 val swaggerCoreJakartaVersion = "2.2.26"
@@ -9,10 +12,10 @@ val springmockkVersion = "4.0.2"
 val jupiterJunitEngineVersion = "5.11.3"
 
 plugins {
+  id("ch.acanda.gradle.fabrikt") version "1.9.0"
   id("com.diffplug.spotless") version "6.25.0"
   id("info.solidsoft.pitest") version "1.15.0"
   id("io.spring.dependency-management") version "1.1.6"
-  id("org.openapi.generator") version "7.10.0"
   id("org.springframework.boot") version "3.4.0"
   kotlin("jvm") version "1.9.25"
   kotlin("kapt") version "2.1.0"
@@ -74,7 +77,7 @@ tasks.named("build") {
   dependsOn("spotlessKotlinGradleApply")
 }
 
-tasks.named<JavaCompile>("compileJava") { dependsOn("openApiGenerate") }
+tasks.named<JavaCompile>("compileJava") { dependsOn("fabriktGenerate") }
 
 tasks.named<Test>("test") {
   dependsOn("pitest")
@@ -82,27 +85,19 @@ tasks.named<Test>("test") {
 }
 
 tasks.configureEach {
-  if (name == "kaptGenerateStubsKotlin") {
-    dependsOn("openApiGenerate")
+  if (name == "kaptGenerateStubsKotlin" || name == "spotlessKotlin") {
+    dependsOn("fabriktGenerate")
   }
 }
 
-openApiGenerate {
-  apiPackage.set("${group}.${project.name}.api")
-  configOptions.set(
-      mapOf(
-          "interfaceOnly" to "true",
-          "skipOperationExample" to "true",
-          "useEnumCaseInsensitive" to "true",
-          "useSpringBoot3" to "true"))
-  generateApiTests.set(false)
-  generateApiDocumentation.set(false)
-  generateModelTests.set(false)
-  generateModelDocumentation.set(false)
-  generatorName.set("spring")
-  inputSpec.set("$rootDir/src/main/resources/openapi/roundest.yaml")
-  modelPackage.set("${group}.${project.name}.model")
-  outputDir.set(layout.buildDirectory.dir("generated/sources/openapi").get().asFile.toString())
+fabrikt {
+  generate("roundest") {
+    apiFile = file("src/main/resources/openapi/roundest.yaml")
+    basePackage = "${group}.${project.name}"
+    controller.generate = true
+    controller.target.set(ControllerTargetOption.Spring)
+    validationLibrary.set(ValidationLibraryOption.Jakarta)
+  }
 }
 
 pitest {

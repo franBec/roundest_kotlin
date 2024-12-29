@@ -1,8 +1,8 @@
 package dev.pollito.roundest_kotlin.service.impl
 
 import dev.pollito.roundest_kotlin.mapper.PokemonModelMapper
-import dev.pollito.roundest_kotlin.model.Pokemon
-import dev.pollito.roundest_kotlin.model.Pokemons
+import dev.pollito.roundest_kotlin.models.Pokemon
+import dev.pollito.roundest_kotlin.models.Pokemons
 import dev.pollito.roundest_kotlin.repository.PokemonRepository
 import dev.pollito.roundest_kotlin.service.PokemonService
 import dev.pollito.roundest_kotlin.util.PageableUtils
