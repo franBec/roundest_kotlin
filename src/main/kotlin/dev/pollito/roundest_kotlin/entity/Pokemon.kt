@@ -9,7 +9,7 @@ import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "pokemons", schema = "dbo")
+@Table(name = "pokemons", schema = "public")
 data class Pokemon(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -19,19 +19,14 @@ The OpenAPI documentation for the API can be found in the [src/main/resources/op
 - For containerized deployment
     - **Docker**
 
-### Run with Gradle
+### Run Locally with IntelliJ
 1. Clone the repository:
     ```bash
     git clone https://github.com/franBec/roundest_kotlin
     ```
-2. Navigate to the project directory:
-    ```bash
-    cd roundest_kotlin
-    ```
-3. Build and run the application using Gradle:
-    ```bash
-    ./gradlew bootRun
-    ```
+2. Open the project in IntelliJ IDEA.
+3. Set the environment variable `SPRING_PROFILES_ACTIVE` to `dev` for local development.
+4. Run the application from the IntelliJ run configurations.
 
 ### Run with Docker
 1. Clone the repository:

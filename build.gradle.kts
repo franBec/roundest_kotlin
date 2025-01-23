@@ -7,13 +7,14 @@ val jacksonDatabindNullableVersion = "0.2.6"
 val mockitoKotlinVersion = "5.4.0"
 val springmockkVersion = "4.0.2"
 val jupiterJunitEngineVersion = "5.11.3"
+val postgresqlVersion = "42.7.5"
 
 plugins {
   id("com.diffplug.spotless") version "6.25.0"
   id("info.solidsoft.pitest") version "1.15.0"
   id("io.spring.dependency-management") version "1.1.6"
-  id("org.openapi.generator") version "7.10.0"
-  id("org.springframework.boot") version "3.4.0"
+  id("org.openapi.generator") version "7.11.0"
+  id("org.springframework.boot") version "3.4.2"
   kotlin("jvm") version "1.9.25"
   kotlin("kapt") version "2.1.0"
   kotlin("plugin.jpa") version "1.9.25"
@@ -52,6 +53,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-web")
   kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
+  runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
   runtimeOnly("com.h2database:h2")
   testImplementation("com.ninja-squad:springmockk:$springmockkVersion")
   testImplementation("org.junit.jupiter:junit-jupiter-engine:$jupiterJunitEngineVersion")
