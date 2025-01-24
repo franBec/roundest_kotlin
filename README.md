@@ -13,9 +13,8 @@ The OpenAPI documentation for the API can be found in the [src/main/resources/op
 ## Getting Started
 
 ### Prerequisites
-- For running with Gradle:
-    - **Java 21**
-    - **Gradle**
+- For running with IntelliJ:
+    - **IntelliJ** (Community Edition works fine)
 - For containerized deployment
     - **Docker**
 
