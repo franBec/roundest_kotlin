@@ -22,7 +22,7 @@ class PokemonServiceImpl(
       name: String?,
       pageNumber: Int,
       pageSize: Int,
-      pageSort: List<String>,
+      pageSort: List<String>?,
       random: Boolean
   ): Pokemons {
     if (random) {

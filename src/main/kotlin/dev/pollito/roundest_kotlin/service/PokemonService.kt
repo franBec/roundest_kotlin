@@ -8,7 +8,7 @@ interface PokemonService {
       name: String?,
       pageNumber: Int,
       pageSize: Int,
-      pageSort: List<String>,
+      pageSort: List<String>?,
       random: Boolean
   ): Pokemons
 

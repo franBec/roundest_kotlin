@@ -14,7 +14,7 @@ class PokemonsController(private val pokemonService: PokemonService) : PokemonsA
       name: String?,
       pageNumber: Int,
       pageSize: Int,
-      pageSort: List<String>,
+      pageSort: List<String>?,
       random: Boolean
   ): ResponseEntity<Pokemons> {
     return ResponseEntity.ok(pokemonService.findAll(name, pageNumber, pageSize, pageSort, random))

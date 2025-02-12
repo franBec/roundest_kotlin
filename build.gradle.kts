@@ -87,7 +87,7 @@ tasks.named<Test>("test") {
 
 tasks.configureEach {
   if (name == "kaptGenerateStubsKotlin" || name == "spotlessKotlin") {
-    dependsOn("replaceValWithVar")
+    dependsOn("replaceValWithVar", "replacePageSortType")
   }
 }
 
@@ -121,7 +121,35 @@ val replaceValWithVar by
       }
     }
 
-tasks.named("openApiGenerate") { finalizedBy("replaceValWithVar") }
+val replacePageSortType by
+    tasks.register<DefaultTask>("replacePageSortType") {
+      group = "custom"
+      description = "Replaces the type of 'pageSort' parameter in the 'findAll' function."
+
+      doLast {
+        val sourceFile =
+            file(
+                "build/generated/sources/openapi/src/main/kotlin/dev/pollito/roundest_kotlin/api/PokemonsApi.kt")
+        if (sourceFile.exists()) {
+          val originalContent = sourceFile.readText(Charsets.UTF_8)
+          val updatedContent =
+              originalContent.replace(
+                  "pageSort: kotlin.collections.List<kotlin.String>",
+                  "pageSort: kotlin.collections.List<kotlin.String>?")
+
+          if (originalContent != updatedContent) {
+            sourceFile.writeText(updatedContent, Charsets.UTF_8)
+            logger.lifecycle("Modified: ${sourceFile.absolutePath}")
+          } else {
+            logger.lifecycle("Unchanged: ${sourceFile.absolutePath}")
+          }
+        } else {
+          logger.lifecycle("Source file does not exist: $sourceFile")
+        }
+      }
+    }
+
+tasks.named("openApiGenerate") { finalizedBy("replaceValWithVar", "replacePageSortType") }
 
 openApiGenerate {
   apiPackage.set("${group}.${project.name}.api")
